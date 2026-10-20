@@ -86,12 +86,8 @@ public class ExerciseController {
 
     @GetMapping("/{id}/video")
     public ResponseEntity<Resource> getVideo(@PathVariable("id") Long id) {
-        Resource video = exerciseService.getVideo(id);
-        MediaType contentType = video.getFilename() != null && video.getFilename().endsWith(".mp4")
-                ? MediaType.parseMediaType("video/mp4")
-                : MediaType.IMAGE_JPEG;
         return ResponseEntity.ok()
-                .contentType(contentType)
-                .body(video);
+                .contentType(MediaType.parseMediaType("video/mp4"))
+                .body(exerciseService.getVideo(id));
     }
 }

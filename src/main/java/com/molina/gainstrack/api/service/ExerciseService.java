@@ -88,23 +88,17 @@ public class ExerciseService {
 
     public Resource getImage(Long id) {
         String rawPath = exerciseRepository.findRawImageUrl(id);
-        if (rawPath != null) {
-            Resource resource = new FileSystemResource(Paths.get(uploadsDir).resolve(rawPath));
-            if (resource.exists()) return resource;
-        }
-        Resource fallback = new FileSystemResource(Paths.get(uploadsDir).resolve("exercises/images/no-available.jpeg"));
-        if (!fallback.exists()) throw new NotFoundException("Imagen no encontrada");
-        return fallback;
+        if (rawPath == null) throw new NotFoundException("Imagen no disponible para este ejercicio");
+        Resource resource = new FileSystemResource(Paths.get(uploadsDir).resolve(rawPath));
+        if (!resource.exists()) throw new NotFoundException("Imagen no encontrada");
+        return resource;
     }
 
     public Resource getVideo(Long id) {
         String rawPath = exerciseRepository.findRawVideoUrl(id);
-        if (rawPath != null) {
-            Resource resource = new FileSystemResource(Paths.get(uploadsDir).resolve(rawPath));
-            if (resource.exists()) return resource;
-        }
-        Resource fallback = new FileSystemResource(Paths.get(uploadsDir).resolve("exercises/images/no-available.jpeg"));
-        if (!fallback.exists()) throw new NotFoundException("Video no encontrado");
-        return fallback;
+        if (rawPath == null) throw new NotFoundException("Video no disponible para este ejercicio");
+        Resource resource = new FileSystemResource(Paths.get(uploadsDir).resolve(rawPath));
+        if (!resource.exists()) throw new NotFoundException("Video no encontrado");
+        return resource;
     }
 }

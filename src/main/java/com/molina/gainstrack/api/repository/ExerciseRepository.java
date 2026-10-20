@@ -17,9 +17,6 @@ import java.util.List;
 @Repository
 public class ExerciseRepository {
 
-    /**
-     * @param jdbcClient cliente JDBC para ejecutar consultas SQL
-     */
     private final JdbcClient jdbcClient;
 
     public ExerciseRepository(JdbcClient jdbcClient) {
@@ -144,6 +141,24 @@ public class ExerciseRepository {
         if  (affectedRows == 0) {
             throw new NotFoundException("Ejercicio no encontrado");
         }
+    }
+
+    public String findRawImageUrl(Long id) {
+        List<String> result = jdbcClient.sql("SELECT image_url FROM exercises WHERE id = :id AND deleted_at IS NULL")
+                                        .param("id", id)
+                                        .query((rs, rowNum) -> rs.getString("image_url"))
+                                        .list();
+        if (result.isEmpty()) throw new NotFoundException("Ejercicio no encontrado");
+        return result.get(0);
+    }
+
+    public String findRawVideoUrl(Long id) {
+        List<String> result = jdbcClient.sql("SELECT video_url FROM exercises WHERE id = :id AND deleted_at IS NULL")
+                                        .param("id", id)
+                                        .query((rs, rowNum) -> rs.getString("video_url"))
+                                        .list();
+        if (result.isEmpty()) throw new NotFoundException("Ejercicio no encontrado");
+        return result.get(0);
     }
 
     public boolean existsById(Long id) {

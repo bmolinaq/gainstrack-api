@@ -2,11 +2,17 @@ package com.molina.gainstrack.api.service;
 
 import com.molina.gainstrack.api.dto.exercise.ExerciseRequest;
 import com.molina.gainstrack.api.dto.exercise.ExerciseResponse;
+import com.molina.gainstrack.api.exception.NotFoundException;
 import com.molina.gainstrack.api.model.User;
 import com.molina.gainstrack.api.repository.ExerciseRepository;
 import com.molina.gainstrack.api.utils.AuthUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -21,15 +27,14 @@ public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
     private final AuthUtils authUtils;
+    private final String uploadsDir;
 
-    /**
-     * @param exerciseRepository repositorio de acceso a datos de ejercicios
-     * @param authUtils componente de acceso a metodo para obtener usuario
-     */
     public ExerciseService(ExerciseRepository exerciseRepository,
-                           AuthUtils authUtils) {
+                           AuthUtils authUtils,
+                           @Value("${app.uploads-dir}") String uploadsDir) {
         this.exerciseRepository = exerciseRepository;
         this.authUtils = authUtils;
+        this.uploadsDir = uploadsDir;
     }
 
     /**
@@ -79,5 +84,27 @@ public class ExerciseService {
     public void deleteById(Long id) {
         User user = this.authUtils.getAuthenticatedUser();
         this.exerciseRepository.deleteById(id, user.getId());
+    }
+
+    public Resource getImage(Long id) {
+        String rawPath = exerciseRepository.findRawImageUrl(id);
+        if (rawPath != null) {
+            Resource resource = new FileSystemResource(Paths.get(uploadsDir).resolve(rawPath));
+            if (resource.exists()) return resource;
+        }
+        Resource fallback = new FileSystemResource(Paths.get(uploadsDir).resolve("exercises/images/no-available.jpeg"));
+        if (!fallback.exists()) throw new NotFoundException("Imagen no encontrada");
+        return fallback;
+    }
+
+    public Resource getVideo(Long id) {
+        String rawPath = exerciseRepository.findRawVideoUrl(id);
+        if (rawPath != null) {
+            Resource resource = new FileSystemResource(Paths.get(uploadsDir).resolve(rawPath));
+            if (resource.exists()) return resource;
+        }
+        Resource fallback = new FileSystemResource(Paths.get(uploadsDir).resolve("exercises/images/no-available.jpeg"));
+        if (!fallback.exists()) throw new NotFoundException("Video no encontrado");
+        return fallback;
     }
 }

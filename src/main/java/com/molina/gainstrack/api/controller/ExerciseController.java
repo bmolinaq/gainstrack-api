@@ -4,6 +4,8 @@ import com.molina.gainstrack.api.dto.exercise.ExerciseRequest;
 import com.molina.gainstrack.api.dto.exercise.ExerciseResponse;
 import com.molina.gainstrack.api.service.ExerciseService;
 import jakarta.validation.Valid;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,5 +75,23 @@ public class ExerciseController {
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         exerciseService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<Resource> getImage(@PathVariable("id") Long id) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(exerciseService.getImage(id));
+    }
+
+    @GetMapping("/{id}/video")
+    public ResponseEntity<Resource> getVideo(@PathVariable("id") Long id) {
+        Resource video = exerciseService.getVideo(id);
+        MediaType contentType = video.getFilename() != null && video.getFilename().endsWith(".mp4")
+                ? MediaType.parseMediaType("video/mp4")
+                : MediaType.IMAGE_JPEG;
+        return ResponseEntity.ok()
+                .contentType(contentType)
+                .body(video);
     }
 }

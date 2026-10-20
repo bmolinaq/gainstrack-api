@@ -16,3 +16,6 @@ jwt:
 
 google:
   client-id: ${GOOGLE_CLIENT_ID}
+
+app:
+  uploads-dir: ${user.home}/Documents/projects/uploads

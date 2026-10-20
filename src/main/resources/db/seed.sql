@@ -37,128 +37,128 @@ INSERT INTO gyms (user_id, name) VALUES
 -- ------------------------------------------------------------
 -- 4. exercises — globales (user_id = NULL, is_predefined = TRUE)
 -- ------------------------------------------------------------
-INSERT INTO exercises (name, muscle_group_id, user_id, is_predefined) VALUES
+INSERT INTO exercises (name, muscle_group_id, user_id, is_predefined, image_url, video_url) VALUES
 
 -- Pecho (id: 1)
-('Press de Banca con Barra', 1, NULL, TRUE),                    -- id: 1
-('Press de Banca Inclinado con Barra', 1, NULL, TRUE),          -- id: 2
-('Press de Banca Declinado con Barra', 1, NULL, TRUE),          -- id: 3
-('Press de Banca con Mancuernas', 1, NULL, TRUE),               -- id: 4
-('Press de Banca Inclinado con Mancuernas', 1, NULL, TRUE),     -- id: 5
-('Aperturas con Mancuernas en Banco Plano', 1, NULL, TRUE),     -- id: 6
-('Aperturas con Mancuernas en Banco Inclinado', 1, NULL, TRUE), -- id: 7
-('Cruce de Poleas en Polea Alta', 1, NULL, TRUE),               -- id: 8
-('Cruce de Poleas en Polea Baja', 1, NULL, TRUE),               -- id: 9
-('Fondos en Paralelas', 1, NULL, TRUE),                         -- id: 10
-('Press de Pecho en Máquina', 1, NULL, TRUE),                   -- id: 11
-('Pullover con Mancuerna', 1, NULL, TRUE),                      -- id: 12
+('Press de Banca con Barra', 1, NULL, TRUE, NULL, NULL),                                                                                                                                          -- id: 1
+('Press de Banca Inclinado con Barra', 1, NULL, TRUE, NULL, NULL),                                                                                                                                -- id: 2
+('Press de Banca Declinado con Barra', 1, NULL, TRUE, NULL, NULL),                                                                                                                                -- id: 3
+('Press de Banca con Mancuernas', 1, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 4
+('Press de Banca Inclinado con Mancuernas', 1, NULL, TRUE, 'exercises/images/press-de-banca-inclinado-con-mancuernas.jpeg', 'exercises/videos/press-de-banca-inclinado-con-mancuernas.mp4'),      -- id: 5
+('Aperturas con Mancuernas en Banco Plano', 1, NULL, TRUE, NULL, NULL),                                                                                                                           -- id: 6
+('Aperturas con Mancuernas en Banco Inclinado', 1, NULL, TRUE, NULL, NULL),                                                                                                                       -- id: 7
+('Cruce de Poleas en Polea Alta', 1, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 8
+('Cruce de Poleas en Polea Baja', 1, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 9
+('Fondos en Paralelas', 1, NULL, TRUE, NULL, NULL),                                                                                                                                               -- id: 10
+('Press de Pecho en Máquina', 1, NULL, TRUE, NULL, NULL),                                                                                                                                         -- id: 11
+('Pullover con Mancuerna', 1, NULL, TRUE, NULL, NULL),                                                                                                                                            -- id: 12
 
 -- Espalda (id: 2)
-('Dominadas Agarre Prono', 2, NULL, TRUE),                      -- id: 13
-('Dominadas Agarre Supino', 2, NULL, TRUE),                     -- id: 14
-('Remo con Barra Agarre Prono', 2, NULL, TRUE),                 -- id: 15
-('Remo con Mancuerna a Una Mano', 2, NULL, TRUE),               -- id: 16
-('Remo en Polea Baja Sentado', 2, NULL, TRUE),                  -- id: 17
-('Jalón al Pecho en Polea Alta', 2, NULL, TRUE),                -- id: 18
-('Jalón al Pecho Agarre Neutro', 2, NULL, TRUE),                -- id: 19
-('Jalón Trasero en Polea Alta', 2, NULL, TRUE),                 -- id: 20
-('Remo en Máquina', 2, NULL, TRUE),                             -- id: 21
-('Pull-Over en Polea Alta', 2, NULL, TRUE),                     -- id: 22
-('Encogimientos de Hombros con Barra', 2, NULL, TRUE),          -- id: 23
+('Dominadas Agarre Prono', 2, NULL, TRUE, NULL, NULL),                                                                                                                                            -- id: 13
+('Dominadas Agarre Supino', 2, NULL, TRUE, NULL, NULL),                                                                                                                                           -- id: 14
+('Remo con Barra Agarre Prono', 2, NULL, TRUE, NULL, NULL),                                                                                                                                       -- id: 15
+('Remo con Mancuerna a Una Mano', 2, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 16
+('Remo en Polea Baja Sentado', 2, NULL, TRUE, NULL, NULL),                                                                                                                                        -- id: 17
+('Jalón al Pecho en Polea Alta', 2, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 18
+('Jalón al Pecho Agarre Neutro', 2, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 19
+('Jalón Trasero en Polea Alta', 2, NULL, TRUE, NULL, NULL),                                                                                                                                       -- id: 20
+('Remo en Máquina', 2, NULL, TRUE, NULL, NULL),                                                                                                                                                   -- id: 21
+('Pull-Over en Polea Alta', 2, NULL, TRUE, NULL, NULL),                                                                                                                                           -- id: 22
+('Encogimientos de Hombros con Barra', 2, NULL, TRUE, NULL, NULL),                                                                                                                                -- id: 23
 
 -- Piernas (id: 3)
-('Sentadilla con Barra Libre', 3, NULL, TRUE),                  -- id: 24
-('Sentadilla Frontal con Barra', 3, NULL, TRUE),                -- id: 25
-('Sentadilla Hack con Barra', 3, NULL, TRUE),                   -- id: 26
-('Prensa de Piernas 45 Grados', 3, NULL, TRUE),                 -- id: 27
-('Zancada con Mancuernas', 3, NULL, TRUE),                      -- id: 28
-('Zancada Búlgara con Mancuernas', 3, NULL, TRUE),              -- id: 29
-('Peso Muerto Convencional con Barra', 3, NULL, TRUE),          -- id: 30
-('Peso Muerto Sumo con Barra', 3, NULL, TRUE),                  -- id: 31
+('Sentadilla con Barra Libre', 3, NULL, TRUE, NULL, NULL),                                                                                                                                        -- id: 24
+('Sentadilla Frontal con Barra', 3, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 25
+('Sentadilla Hack con Barra', 3, NULL, TRUE, NULL, NULL),                                                                                                                                         -- id: 26
+('Prensa de Piernas 45 Grados', 3, NULL, TRUE, NULL, NULL),                                                                                                                                       -- id: 27
+('Zancada con Mancuernas', 3, NULL, TRUE, NULL, NULL),                                                                                                                                            -- id: 28
+('Zancada Búlgara con Mancuernas', 3, NULL, TRUE, NULL, NULL),                                                                                                                                    -- id: 29
+('Peso Muerto Convencional con Barra', 3, NULL, TRUE, NULL, NULL),                                                                                                                                -- id: 30
+('Peso Muerto Sumo con Barra', 3, NULL, TRUE, NULL, NULL),                                                                                                                                        -- id: 31
 
 -- Hombros (id: 4)
-('Press Militar con Barra de Pie', 4, NULL, TRUE),              -- id: 32
-('Press Militar con Barra Sentado', 4, NULL, TRUE),             -- id: 33
-('Press Arnold con Mancuernas', 4, NULL, TRUE),                 -- id: 34
-('Press de Hombros con Mancuernas Sentado', 4, NULL, TRUE),     -- id: 35
-('Elevaciones Laterales con Mancuernas', 4, NULL, TRUE),        -- id: 36
-('Elevaciones Frontales con Mancuernas', 4, NULL, TRUE),        -- id: 37
-('Elevaciones Laterales en Polea Baja', 4, NULL, TRUE),         -- id: 38
-('Pájaros con Mancuernas en Banco Inclinado', 4, NULL, TRUE),   -- id: 39
-('Face Pull en Polea Alta', 4, NULL, TRUE),                     -- id: 40
-('Press de Hombros en Máquina', 4, NULL, TRUE),                 -- id: 41
+('Press Militar con Barra de Pie', 4, NULL, TRUE, NULL, NULL),                                                                                                                                    -- id: 32
+('Press Militar con Barra Sentado', 4, NULL, TRUE, NULL, NULL),                                                                                                                                   -- id: 33
+('Press Arnold con Mancuernas', 4, NULL, TRUE, NULL, NULL),                                                                                                                                       -- id: 34
+('Press de Hombros con Mancuernas Sentado', 4, NULL, TRUE, NULL, NULL),                                                                                                                           -- id: 35
+('Elevaciones Laterales con Mancuernas', 4, NULL, TRUE, NULL, NULL),                                                                                                                              -- id: 36
+('Elevaciones Frontales con Mancuernas', 4, NULL, TRUE, NULL, NULL),                                                                                                                              -- id: 37
+('Elevaciones Laterales en Polea Baja', 4, NULL, TRUE, NULL, NULL),                                                                                                                               -- id: 38
+('Pájaros con Mancuernas en Banco Inclinado', 4, NULL, TRUE, NULL, NULL),                                                                                                                         -- id: 39
+('Face Pull en Polea Alta', 4, NULL, TRUE, NULL, NULL),                                                                                                                                           -- id: 40
+('Press de Hombros en Máquina', 4, NULL, TRUE, NULL, NULL),                                                                                                                                       -- id: 41
 
 -- Glúteos (id: 5)
-('Hip Thrust con Barra', 5, NULL, TRUE),                        -- id: 42
-('Hip Thrust en Máquina', 5, NULL, TRUE),                       -- id: 43
-('Patada de Glúteo en Polea Baja', 5, NULL, TRUE),              -- id: 44
-('Abducción de Cadera en Máquina', 5, NULL, TRUE),              -- id: 45
-('Aducción de Cadera en Máquina', 5, NULL, TRUE),               -- id: 46
-('Buenos Días con Barra', 5, NULL, TRUE),                       -- id: 47
+('Hip Thrust con Barra', 5, NULL, TRUE, NULL, NULL),                                                                                                                                              -- id: 42
+('Hip Thrust en Máquina', 5, NULL, TRUE, NULL, NULL),                                                                                                                                             -- id: 43
+('Patada de Glúteo en Polea Baja', 5, NULL, TRUE, NULL, NULL),                                                                                                                                    -- id: 44
+('Abducción de Cadera en Máquina', 5, NULL, TRUE, NULL, NULL),                                                                                                                                    -- id: 45
+('Aducción de Cadera en Máquina', 5, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 46
+('Buenos Días con Barra', 5, NULL, TRUE, NULL, NULL),                                                                                                                                             -- id: 47
 
 -- Core (id: 6)
-('Plancha Isométrica', 6, NULL, TRUE),                          -- id: 48
-('Plancha Lateral Isométrica', 6, NULL, TRUE),                  -- id: 49
-('Crunch Abdominal', 6, NULL, TRUE),                            -- id: 50
-('Crunch Abdominal en Polea Alta', 6, NULL, TRUE),              -- id: 51
-('Elevación de Piernas en Barra', 6, NULL, TRUE),               -- id: 52
-('Rueda Abdominal', 6, NULL, TRUE),                             -- id: 53
-('Rotación de Torso en Polea', 6, NULL, TRUE),                  -- id: 54
+('Plancha Isométrica', 6, NULL, TRUE, NULL, NULL),                                                                                                                                                -- id: 48
+('Plancha Lateral Isométrica', 6, NULL, TRUE, NULL, NULL),                                                                                                                                        -- id: 49
+('Crunch Abdominal', 6, NULL, TRUE, NULL, NULL),                                                                                                                                                  -- id: 50
+('Crunch Abdominal en Polea Alta', 6, NULL, TRUE, NULL, NULL),                                                                                                                                    -- id: 51
+('Elevación de Piernas en Barra', 6, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 52
+('Rueda Abdominal', 6, NULL, TRUE, NULL, NULL),                                                                                                                                                   -- id: 53
+('Rotación de Torso en Polea', 6, NULL, TRUE, NULL, NULL),                                                                                                                                        -- id: 54
 
 -- Bíceps (id: 7)
-('Curl de Bíceps con Barra Recta', 7, NULL, TRUE),              -- id: 55
-('Curl de Bíceps con Barra Z', 7, NULL, TRUE),                  -- id: 56
-('Curl de Bíceps con Mancuernas Alternado', 7, NULL, TRUE),     -- id: 57
-('Curl Martillo con Mancuernas', 7, NULL, TRUE),                -- id: 58
-('Curl de Bíceps en Polea Baja', 7, NULL, TRUE),                -- id: 59
-('Curl de Bíceps en Banco Inclinado', 7, NULL, TRUE),           -- id: 60
-('Curl de Bíceps Concentrado con Mancuerna', 7, NULL, TRUE),    -- id: 61
-('Curl de Bíceps en Máquina', 7, NULL, TRUE),                   -- id: 62
+('Curl de Bíceps con Barra Recta', 7, NULL, TRUE, NULL, NULL),                                                                                                                                    -- id: 55
+('Curl de Bíceps con Barra Z', 7, NULL, TRUE, NULL, NULL),                                                                                                                                        -- id: 56
+('Curl de Bíceps con Mancuernas Alternado', 7, NULL, TRUE, NULL, NULL),                                                                                                                           -- id: 57
+('Curl Martillo con Mancuernas', 7, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 58
+('Curl de Bíceps en Polea Baja', 7, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 59
+('Curl de Bíceps en Banco Inclinado', 7, NULL, TRUE, NULL, NULL),                                                                                                                                 -- id: 60
+('Curl de Bíceps Concentrado con Mancuerna', 7, NULL, TRUE, NULL, NULL),                                                                                                                          -- id: 61
+('Curl de Bíceps en Máquina', 7, NULL, TRUE, NULL, NULL),                                                                                                                                         -- id: 62
 
 -- Tríceps (id: 8)
-('Press Francés con Barra Z', 8, NULL, TRUE),                   -- id: 63
-('Press Francés con Mancuernas', 8, NULL, TRUE),                -- id: 64
-('Extensión de Tríceps en Polea Alta con Cuerda', 8, NULL, TRUE), -- id: 65
-('Extensión de Tríceps en Polea Alta con Barra', 8, NULL, TRUE),  -- id: 66
-('Extensión de Tríceps sobre la Cabeza en Polea', 8, NULL, TRUE), -- id: 67
-('Fondos en Banco para Tríceps', 8, NULL, TRUE),                -- id: 68
-('Press Cerrado con Barra', 8, NULL, TRUE),                     -- id: 69
-('Patada de Tríceps con Mancuerna', 8, NULL, TRUE),             -- id: 70
+('Press Francés con Barra Z', 8, NULL, TRUE, NULL, NULL),                                                                                                                                         -- id: 63
+('Press Francés con Mancuernas', 8, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 64
+('Extensión de Tríceps en Polea Alta con Cuerda', 8, NULL, TRUE, NULL, NULL),                                                                                                                     -- id: 65
+('Extensión de Tríceps en Polea Alta con Barra', 8, NULL, TRUE, NULL, NULL),                                                                                                                      -- id: 66
+('Extensión de Tríceps sobre la Cabeza en Polea', 8, NULL, TRUE, NULL, NULL),                                                                                                                     -- id: 67
+('Fondos en Banco para Tríceps', 8, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 68
+('Press Cerrado con Barra', 8, NULL, TRUE, NULL, NULL),                                                                                                                                           -- id: 69
+('Patada de Tríceps con Mancuerna', 8, NULL, TRUE, NULL, NULL),                                                                                                                                   -- id: 70
 
 -- Antebrazos (id: 9)
-('Curl de Muñeca con Barra', 9, NULL, TRUE),                    -- id: 71
-('Curl de Muñeca Inverso con Barra', 9, NULL, TRUE),            -- id: 72
-('Curl de Muñeca con Mancuerna', 9, NULL, TRUE),                -- id: 73
+('Curl de Muñeca con Barra', 9, NULL, TRUE, NULL, NULL),                                                                                                                                          -- id: 71
+('Curl de Muñeca Inverso con Barra', 9, NULL, TRUE, NULL, NULL),                                                                                                                                  -- id: 72
+('Curl de Muñeca con Mancuerna', 9, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 73
 
 -- Cuádriceps (id: 10)
-('Extensión de Cuádriceps en Máquina', 10, NULL, TRUE),         -- id: 74
-('Sentadilla Sissy', 10, NULL, TRUE),                           -- id: 75
-('Prensa de Piernas Pies Juntos', 10, NULL, TRUE),              -- id: 76
+('Extensión de Cuádriceps en Máquina', 10, NULL, TRUE, NULL, NULL),                                                                                                                               -- id: 74
+('Sentadilla Sissy', 10, NULL, TRUE, NULL, NULL),                                                                                                                                                 -- id: 75
+('Prensa de Piernas Pies Juntos', 10, NULL, TRUE, NULL, NULL),                                                                                                                                    -- id: 76
 
 -- Isquiotibiales (id: 11)
-('Curl de Isquiotibiales Tumbado en Máquina', 11, NULL, TRUE),  -- id: 77
-('Curl de Isquiotibiales Sentado en Máquina', 11, NULL, TRUE),  -- id: 78
-('Peso Muerto Rumano con Barra', 11, NULL, TRUE),               -- id: 79
-('Peso Muerto Rumano con Mancuernas', 11, NULL, TRUE),          -- id: 80
+('Curl de Isquiotibiales Tumbado en Máquina', 11, NULL, TRUE, NULL, NULL),                                                                                                                        -- id: 77
+('Curl de Isquiotibiales Sentado en Máquina', 11, NULL, TRUE, NULL, NULL),                                                                                                                        -- id: 78
+('Peso Muerto Rumano con Barra', 11, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 79
+('Peso Muerto Rumano con Mancuernas', 11, NULL, TRUE, NULL, NULL),                                                                                                                                -- id: 80
 
 -- Pantorrillas (id: 12)
-('Elevación de Pantorrillas de Pie en Máquina', 12, NULL, TRUE),   -- id: 81
-('Elevación de Pantorrillas Sentado en Máquina', 12, NULL, TRUE),  -- id: 82
-('Elevación de Pantorrillas en Prensa 45 Grados', 12, NULL, TRUE), -- id: 83
+('Elevación de Pantorrillas de Pie en Máquina', 12, NULL, TRUE, NULL, NULL),                                                                                                                      -- id: 81
+('Elevación de Pantorrillas Sentado en Máquina', 12, NULL, TRUE, NULL, NULL),                                                                                                                     -- id: 82
+('Elevación de Pantorrillas en Prensa 45 Grados', 12, NULL, TRUE, NULL, NULL),                                                                                                                    -- id: 83
 
 -- Dorsal (id: 13)
-('Jalón en Polea Alta Agarre Abierto', 13, NULL, TRUE),         -- id: 84
-('Remo en Polea Baja Agarre Neutro', 13, NULL, TRUE),           -- id: 85
+('Jalón en Polea Alta Agarre Abierto', 13, NULL, TRUE, NULL, NULL),                                                                                                                               -- id: 84
+('Remo en Polea Baja Agarre Neutro', 13, NULL, TRUE, NULL, NULL),                                                                                                                                 -- id: 85
 
 -- Trapecio (id: 14)
-('Encogimientos de Hombros con Mancuernas', 14, NULL, TRUE),    -- id: 86
-('Encogimientos de Hombros en Máquina', 14, NULL, TRUE),        -- id: 87
-('Remo al Mentón con Barra', 14, NULL, TRUE),                   -- id: 88
+('Encogimientos de Hombros con Mancuernas', 14, NULL, TRUE, NULL, NULL),                                                                                                                          -- id: 86
+('Encogimientos de Hombros en Máquina', 14, NULL, TRUE, NULL, NULL),                                                                                                                              -- id: 87
+('Remo al Mentón con Barra', 14, NULL, TRUE, NULL, NULL),                                                                                                                                         -- id: 88
 
 -- Lumbares (id: 15)
-('Extensión Lumbar en Máquina', 15, NULL, TRUE),                -- id: 89
-('Hiperextensión en Banco Romano', 15, NULL, TRUE),             -- id: 90
-('Peso Muerto con Piernas Rígidas', 15, NULL, TRUE);            -- id: 91
+('Extensión Lumbar en Máquina', 15, NULL, TRUE, NULL, NULL),                                                                                                                                      -- id: 89
+('Hiperextensión en Banco Romano', 15, NULL, TRUE, NULL, NULL),                                                                                                                                   -- id: 90
+('Peso Muerto con Piernas Rígidas', 15, NULL, TRUE, NULL, NULL);                                                                                                                                  -- id: 91
 
 
 -- ------------------------------------------------------------

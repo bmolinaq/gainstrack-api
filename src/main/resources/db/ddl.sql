@@ -72,13 +72,15 @@ CREATE INDEX idx_gyms_user_id ON gyms(user_id);
 --             de sesiones que referencian este ejercicio.
 -- ------------------------------------------------------------
 CREATE TABLE exercises (
-    id              BIGINT       NOT NULL AUTO_INCREMENT,
-    name            VARCHAR(150) NOT NULL,
-    muscle_group_id INT          NOT NULL,
-    user_id         BIGINT       NULL,
-    is_predefined   BOOLEAN      NOT NULL DEFAULT FALSE,
-    deleted_at      TIMESTAMP    NULL     DEFAULT NULL,
-    created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id              BIGINT        NOT NULL AUTO_INCREMENT,
+    name            VARCHAR(150)  NOT NULL,
+    muscle_group_id INT           NOT NULL,
+    user_id         BIGINT        NULL,
+    is_predefined   BOOLEAN       NOT NULL DEFAULT FALSE,
+    image_url       VARCHAR(500)  NULL,
+    video_url       VARCHAR(500)  NULL,
+    deleted_at      TIMESTAMP     NULL     DEFAULT NULL,
+    created_at      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_exercises        PRIMARY KEY (id),
     CONSTRAINT fk_exercises_muscle FOREIGN KEY (muscle_group_id)
                                    REFERENCES muscle_groups(id),

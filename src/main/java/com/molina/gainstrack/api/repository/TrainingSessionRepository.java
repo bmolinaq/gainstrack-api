@@ -119,7 +119,7 @@ public class TrainingSessionRepository {
      * rutina en un gimnasio puntual — por ejemplo, todas las sesiones de la
      * rutina de piernas realizadas en un gimnasio determinado.
      * gymId puede ser null — se usa el operador NULL-safe <=> de MySQL para incluir
-     * sesiones sin gimnasio asociado (sesión libre de gimnasio) como un grupo
+     * sesiones sin gimnasio asociado como un grupo
      * válido de búsqueda, tratando null como un gimnasio más.
      * Incluye los datos del gimnasio asociado mediante LEFT JOIN.
      *

@@ -22,8 +22,7 @@ import java.util.List;
  * @param exercises        ejercicios realizados con sus sets — opcional, null se trata como lista vacía
  * @param routineExercises nueva plantilla de la rutina (ejercicios y sets) — opcional.
  *                         null no modifica la rutina; con valor, reemplaza por completo
- *                         los ejercicios y sets de la rutina (una lista vacía la deja vacía).
- *                         Se ignora si la rutina es la rutina libre
+ *                         los ejercicios y sets de la rutina (una lista vacía la deja vacía)
  */
 public record TrainingSessionRequest(
         @NotNull(message = "{field.required}")

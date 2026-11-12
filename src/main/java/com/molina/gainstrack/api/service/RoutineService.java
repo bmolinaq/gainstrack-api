@@ -2,7 +2,6 @@ package com.molina.gainstrack.api.service;
 
 import com.molina.gainstrack.api.dto.routine.*;
 import com.molina.gainstrack.api.dto.session.TrainingSessionSummaryResponse;
-import com.molina.gainstrack.api.exception.ForbiddenException;
 import com.molina.gainstrack.api.exception.NotFoundException;
 import com.molina.gainstrack.api.model.User;
 import com.molina.gainstrack.api.repository.ExerciseRepository;
@@ -106,21 +105,17 @@ public class RoutineService {
 
     /**
      * Elimina una rutina del usuario autenticado.
-     * La rutina especial is_free no se puede eliminar.
      * Por el CASCADE del modelo relacional, se eliminan también
      * todos los ejercicios, sets y sesiones asociadas a esta rutina.
      *
      * @param id id de la rutina a eliminar
-     * @throws ForbiddenException si se intenta eliminar la rutina libre
+     * @throws NotFoundException si la rutina no existe o no pertenece al usuario
      */
     @Transactional
     public void deleteById(Long id) {
         User user = this.authUtils.getAuthenticatedUser();
         RoutineDetailResponse routine = this.routineRepository.findById(id,
                                                                         user.getId());
-
-        if (routine.isFree())
-            throw new ForbiddenException("La rutina libre no se puede eliminar");
 
         this.routineRepository.deleteById(id,
                                           user.getId());

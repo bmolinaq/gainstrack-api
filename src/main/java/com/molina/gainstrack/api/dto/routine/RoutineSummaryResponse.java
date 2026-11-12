@@ -10,10 +10,8 @@ import java.time.LocalDate;
  * @param name      nombre de la rutina
  * @param createdAt fecha de creación de la rutina
  * @param notes     notas opcionales de la rutina
- * @param isFree    indica si es la rutina especial de sesiones libres
  */
 public record RoutineSummaryResponse(Long id,
                                      String name,
                                      LocalDate createdAt,
-                                     String notes,
-                                     Boolean isFree) {}
+                                     String notes) {}

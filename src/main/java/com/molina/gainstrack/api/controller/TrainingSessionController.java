@@ -46,7 +46,7 @@ public class TrainingSessionController {
      *
      * @param routineId id de la rutina consultada
      * @param gymId     id del gimnasio consultado — opcional, si se omite se
-     *                  consultan sesiones sin gimnasio asociado (sesión libre de gimnasio)
+     *                  consultan sesiones sin gimnasio asociado
      * @return 200 OK con la lista de sesiones encontradas — vacía si no existe
      *         historial para esa combinación de rutina y gimnasio
      */
@@ -67,7 +67,7 @@ public class TrainingSessionController {
      *
      * @param routineId id de la rutina a ejecutar
      * @param gymId     id del gimnasio — opcional, si se omite se simula una
-     *                  sesión sin gimnasio asociado (sesión libre de gimnasio)
+     *                  sesión sin gimnasio asociado
      * @return 200 OK con el molde de la sesión — ids de sesión, ejercicios y sets siempre null
      */
     @GetMapping("/preview")

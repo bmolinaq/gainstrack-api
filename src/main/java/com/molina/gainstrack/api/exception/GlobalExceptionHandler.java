@@ -172,7 +172,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Maneja operaciones no permitidas por reglas de negocio.
-     * Ejemplo: intentar eliminar la rutina libre.
+     * Ejemplo: iniciar sesión con contraseña en una cuenta registrada con Google.
      *
      * @return 403 Forbidden con el mensaje de negocio definido al lanzar la excepción
      */

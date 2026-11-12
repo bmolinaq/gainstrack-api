@@ -164,14 +164,13 @@ update exercises set image_url = 'exercises/images/apertura-de-pecho-con-mancuer
 
 -- ------------------------------------------------------------
 -- 5. routines
--- Rutinas de John Doe — incluye rutina libre automática
+-- Rutinas de John Doe
 -- ------------------------------------------------------------
-INSERT INTO routines (user_id, name, notes, is_free) VALUES
-(1, 'Sesión Libre', NULL, TRUE),                                        -- id: 1
-(1, 'Espalda / Bíceps', 'Día de tirón — enfoque en dorsal y bíceps', FALSE),   -- id: 2
-(1, 'Pecho / Tríceps', 'Día de empuje — enfoque en pectoral y tríceps', FALSE), -- id: 3
-(1, 'Piernas', 'Día de pierna completo — cuádriceps, isquios y pantorrillas', FALSE), -- id: 4
-(1, 'Hombros', 'Día de hombros — deltoides y trapecio', FALSE);         -- id: 5
+INSERT INTO routines (user_id, name, notes) VALUES
+(1, 'Espalda / Bíceps', 'Día de tirón — enfoque en dorsal y bíceps'),   -- id: 1
+(1, 'Pecho / Tríceps', 'Día de empuje — enfoque en pectoral y tríceps'), -- id: 2
+(1, 'Piernas', 'Día de pierna completo — cuádriceps, isquios y pantorrillas'), -- id: 3
+(1, 'Hombros', 'Día de hombros — deltoides y trapecio');         -- id: 4
 
 
 -- ------------------------------------------------------------
@@ -180,37 +179,37 @@ INSERT INTO routines (user_id, name, notes, is_free) VALUES
 -- ------------------------------------------------------------
 INSERT INTO routine_exercises (routine_id, exercise_id, order_index, notes) VALUES
 
--- Rutina Espalda/Bíceps (routine_id: 2)
-(2, 13, 1, 'Agarre prono — ancho de hombros'),           -- id: 1  Dominadas Agarre Prono
-(2, 18, 2, 'Bajar hasta el pecho — no soltar escápulas'), -- id: 2  Jalón al Pecho en Polea Alta
-(2, 15, 3, 'Espalda recta — no redondear lumbar'),        -- id: 3  Remo con Barra Agarre Prono
-(2, 16, 4, 'Codo pegado al cuerpo — no girar torso'),     -- id: 4  Remo con Mancuerna a Una Mano
-(2, 55, 5, 'Codos fijos — no balancear'),                 -- id: 5  Curl de Bíceps con Barra Recta
-(2, 58, 6, 'Pulgar alineado con el índice'),              -- id: 6  Curl Martillo con Mancuernas
+-- Rutina Espalda/Bíceps (routine_id: 1)
+(1, 13, 1, 'Agarre prono — ancho de hombros'),           -- id: 1  Dominadas Agarre Prono
+(1, 18, 2, 'Bajar hasta el pecho — no soltar escápulas'), -- id: 2  Jalón al Pecho en Polea Alta
+(1, 15, 3, 'Espalda recta — no redondear lumbar'),        -- id: 3  Remo con Barra Agarre Prono
+(1, 16, 4, 'Codo pegado al cuerpo — no girar torso'),     -- id: 4  Remo con Mancuerna a Una Mano
+(1, 55, 5, 'Codos fijos — no balancear'),                 -- id: 5  Curl de Bíceps con Barra Recta
+(1, 58, 6, 'Pulgar alineado con el índice'),              -- id: 6  Curl Martillo con Mancuernas
 
--- Rutina Pecho/Tríceps (routine_id: 3)
-(3, 1,  1, 'Agarre a la anchura de los hombros'),         -- id: 7  Press de Banca con Barra
-(3, 2,  2, 'Banco a 30 grados — no más'),                 -- id: 8  Press de Banca Inclinado con Barra
-(3, 6,  3, 'Codos ligeramente flexionados'),              -- id: 9  Aperturas con Mancuernas en Banco Plano
-(3, 8,  4, 'Polea a la altura del pecho'),                -- id: 10 Cruce de Poleas en Polea Alta
-(3, 63, 5, 'Codos apuntando al techo — no abrir'),        -- id: 11 Press Francés con Barra Z
-(3, 65, 6, 'Cuerda al costado del cuello'),               -- id: 12 Extensión de Tríceps en Polea Alta con Cuerda
+-- Rutina Pecho/Tríceps (routine_id: 2)
+(2, 1,  1, 'Agarre a la anchura de los hombros'),         -- id: 7  Press de Banca con Barra
+(2, 2,  2, 'Banco a 30 grados — no más'),                 -- id: 8  Press de Banca Inclinado con Barra
+(2, 6,  3, 'Codos ligeramente flexionados'),              -- id: 9  Aperturas con Mancuernas en Banco Plano
+(2, 8,  4, 'Polea a la altura del pecho'),                -- id: 10 Cruce de Poleas en Polea Alta
+(2, 63, 5, 'Codos apuntando al techo — no abrir'),        -- id: 11 Press Francés con Barra Z
+(2, 65, 6, 'Cuerda al costado del cuello'),               -- id: 12 Extensión de Tríceps en Polea Alta con Cuerda
 
--- Rutina Piernas (routine_id: 4)
-(4, 24, 1, 'Profundidad paralela al suelo mínimo'),       -- id: 13 Sentadilla con Barra Libre
-(4, 27, 2, 'Pies a la anchura de cadera'),                -- id: 14 Prensa de Piernas 45 Grados
-(4, 74, 3, 'Rango completo de movimiento'),               -- id: 15 Extensión de Cuádriceps en Máquina
-(4, 77, 4, 'Movimiento lento en negativa'),               -- id: 16 Curl de Isquiotibiales Tumbado en Máquina
-(4, 79, 5, 'Espalda neutra — no redondear'),              -- id: 17 Peso Muerto Rumano con Barra
-(4, 81, 6, 'Rango completo — talón abajo del todo'),      -- id: 18 Elevación de Pantorrillas de Pie en Máquina
+-- Rutina Piernas (routine_id: 3)
+(3, 24, 1, 'Profundidad paralela al suelo mínimo'),       -- id: 13 Sentadilla con Barra Libre
+(3, 27, 2, 'Pies a la anchura de cadera'),                -- id: 14 Prensa de Piernas 45 Grados
+(3, 74, 3, 'Rango completo de movimiento'),               -- id: 15 Extensión de Cuádriceps en Máquina
+(3, 77, 4, 'Movimiento lento en negativa'),               -- id: 16 Curl de Isquiotibiales Tumbado en Máquina
+(3, 79, 5, 'Espalda neutra — no redondear'),              -- id: 17 Peso Muerto Rumano con Barra
+(3, 81, 6, 'Rango completo — talón abajo del todo'),      -- id: 18 Elevación de Pantorrillas de Pie en Máquina
 
--- Rutina Hombros (routine_id: 5)
-(5, 32, 1, 'Core apretado — no arquear lumbar'),          -- id: 19 Press Militar con Barra de Pie
-(5, 36, 2, 'Codos ligeramente flexionados — no subir más del hombro'), -- id: 20 Elevaciones Laterales con Mancuernas
-(5, 37, 3, 'Pulgar arriba — no rotar muñeca'),            -- id: 21 Elevaciones Frontales con Mancuernas
-(5, 40, 4, 'Polea a la altura de los ojos'),              -- id: 22 Face Pull en Polea Alta
-(5, 86, 5, 'Movimiento vertical puro — no rotar'),        -- id: 23 Encogimientos de Hombros con Mancuernas
-(5, 39, 6, 'Pecho apoyado — apretar escápulas al bajar'); -- id: 24 Pájaros con Mancuernas en Banco Inclinado
+-- Rutina Hombros (routine_id: 4)
+(4, 32, 1, 'Core apretado — no arquear lumbar'),          -- id: 19 Press Militar con Barra de Pie
+(4, 36, 2, 'Codos ligeramente flexionados — no subir más del hombro'), -- id: 20 Elevaciones Laterales con Mancuernas
+(4, 37, 3, 'Pulgar arriba — no rotar muñeca'),            -- id: 21 Elevaciones Frontales con Mancuernas
+(4, 40, 4, 'Polea a la altura de los ojos'),              -- id: 22 Face Pull en Polea Alta
+(4, 86, 5, 'Movimiento vertical puro — no rotar'),        -- id: 23 Encogimientos de Hombros con Mancuernas
+(4, 39, 6, 'Pecho apoyado — apretar escápulas al bajar'); -- id: 24 Pájaros con Mancuernas en Banco Inclinado
 
 
 -- ------------------------------------------------------------
@@ -348,25 +347,22 @@ INSERT INTO routine_sets (routine_exercise_id, set_number, weight, reps, notes) 
 INSERT INTO training_sessions (user_id, routine_id, gym_id, session_date, duration, notes) VALUES
 
 -- Semana 1
-(1, 2, 1, '2026-04-01', 65, 'Subí peso en dominadas con lastre'),  -- id: 1 Espalda/Bíceps
-(1, 3, 1, '2026-04-02', 70, 'Press banca llegué a 90kg x 8'),      -- id: 2 Pecho/Tríceps
-(1, 4, 2, '2026-04-04', 80, 'Sentadilla bien — rodillas sin dolor'), -- id: 3 Piernas
-(1, 5, 2, '2026-04-05', 55, 'Hombros cargados — buena sesión'),     -- id: 4 Hombros
+(1, 1, 1, '2026-04-01', 65, 'Subí peso en dominadas con lastre'),  -- id: 1 Espalda/Bíceps
+(1, 2, 1, '2026-04-02', 70, 'Press banca llegué a 90kg x 8'),      -- id: 2 Pecho/Tríceps
+(1, 3, 2, '2026-04-04', 80, 'Sentadilla bien — rodillas sin dolor'), -- id: 3 Piernas
+(1, 4, 2, '2026-04-05', 55, 'Hombros cargados — buena sesión'),     -- id: 4 Hombros
 
 -- Semana 2
-(1, 2, 1, '2026-04-08', 60, 'Jalón con 70kg por primera vez'),     -- id: 5 Espalda/Bíceps
-(1, 3, 3, '2026-04-09', 68, 'Pecho inclinado mejoró bastante'),    -- id: 6 Pecho/Tríceps
-(1, 4, 1, '2026-04-11', 75, 'Prensa con 170kg — nuevo récord'),    -- id: 7 Piernas
-(1, 5, 1, '2026-04-12', 50, 'Elevaciones laterales con 14kg'),     -- id: 8 Hombros
+(1, 1, 1, '2026-04-08', 60, 'Jalón con 70kg por primera vez'),     -- id: 5 Espalda/Bíceps
+(1, 2, 3, '2026-04-09', 68, 'Pecho inclinado mejoró bastante'),    -- id: 6 Pecho/Tríceps
+(1, 3, 1, '2026-04-11', 75, 'Prensa con 170kg — nuevo récord'),    -- id: 7 Piernas
+(1, 4, 1, '2026-04-12', 50, 'Elevaciones laterales con 14kg'),     -- id: 8 Hombros
 
 -- Semana 3
-(1, 2, 2, '2026-04-15', 62, 'Remo con barra técnica mejorada'),    -- id: 9  Espalda/Bíceps
-(1, 3, 2, '2026-04-16', 72, 'Aperturas con 22kg cada lado'),       -- id: 10 Pecho/Tríceps
-(1, 4, 3, '2026-04-18', 85, 'Rumano con 95kg — espalda perfecta'), -- id: 11 Piernas
-(1, 5, 3, '2026-04-19', 58, 'Face pull con más control'),          -- id: 12 Hombros
-
--- Sesión libre
-(1, 1, 1, '2026-04-21', 45, 'Sesión improvisada — solo pecho');    -- id: 13 Sesión Libre
+(1, 1, 2, '2026-04-15', 62, 'Remo con barra técnica mejorada'),    -- id: 9  Espalda/Bíceps
+(1, 2, 2, '2026-04-16', 72, 'Aperturas con 22kg cada lado'),       -- id: 10 Pecho/Tríceps
+(1, 3, 3, '2026-04-18', 85, 'Rumano con 95kg — espalda perfecta'), -- id: 11 Piernas
+(1, 4, 3, '2026-04-19', 58, 'Face pull con más control');          -- id: 12 Hombros
 
 
 -- ------------------------------------------------------------
@@ -406,12 +402,7 @@ INSERT INTO session_exercises (session_id, exercise_id, order_index, notes) VALU
 (4, 37, 3, NULL),
 (4, 40, 4, NULL),
 (4, 86, 5, NULL),
-(4, 39, 6, NULL),
-
--- Sesión libre 13 (2026-04-21) — solo pecho improvisado
-(13, 1,  1, NULL),
-(13, 6,  2, NULL),
-(13, 11, 3, NULL);
+(4, 39, 6, NULL);
 
 
 -- ------------------------------------------------------------
@@ -547,21 +538,4 @@ INSERT INTO sets (session_exercise_id, set_number, weight, reps, notes) VALUES
 -- Pájaros Banco Inclinado (se_id: 24)
 (24, 1, 10.00, 15, NULL),
 (24, 2, 10.00, 15, NULL),
-(24, 3, 10.00, 12, NULL),
-
--- ── Sesión Libre 13 (session_exercise_ids: 25-27) ──
-
--- Press Banca con Barra (se_id: 25)
-(25, 1, 85.00, 10, NULL),
-(25, 2, 85.00, 10, NULL),
-(25, 3, 85.00, 8,  NULL),
-
--- Aperturas Banco Plano (se_id: 26)
-(26, 1, 18.00, 12, NULL),
-(26, 2, 18.00, 12, NULL),
-(26, 3, 18.00, 10, NULL),
-
--- Press Pecho en Máquina (se_id: 27)
-(27, 1, 60.00, 12, NULL),
-(27, 2, 60.00, 12, NULL),
-(27, 3, 60.00, 10, NULL);
+(24, 3, 10.00, 12, NULL);

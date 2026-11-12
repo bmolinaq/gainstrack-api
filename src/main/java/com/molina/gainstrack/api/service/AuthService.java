@@ -10,7 +10,6 @@ import com.molina.gainstrack.api.dto.auth.RegisterRequest;
 import com.molina.gainstrack.api.exception.ForbiddenException;
 import com.molina.gainstrack.api.exception.NotFoundException;
 import com.molina.gainstrack.api.model.User;
-import com.molina.gainstrack.api.repository.RoutineRepository;
 import com.molina.gainstrack.api.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final RoutineRepository routineRepository;
     private final GoogleTokenVerifier googleTokenVerifier;
 
     /**
@@ -45,29 +43,24 @@ public class AuthService {
      * @param passwordEncoder       encoder BCrypt para hashear contraseñas
      * @param jwtService            servicio para generar tokens JWT
      * @param authenticationManager gestor de autenticación de Spring Security
-     * @param routineRepository     repositorio de rutinas para crear rutina libre
      * @param googleTokenVerifier   servicio para verificar tokens de Google OAuth
      */
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        JwtService jwtService,
                        AuthenticationManager authenticationManager,
-                       RoutineRepository routineRepository,
                        GoogleTokenVerifier googleTokenVerifier) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-        this.routineRepository = routineRepository;
         this.googleTokenVerifier = googleTokenVerifier;
     }
 
     /**
      * Registra un nuevo usuario con email y contraseña.
-     * Hashea la contraseña, crea el usuario, genera su rutina libre
-     * automáticamente y retorna un JWT listo para usar.
-     * Si la creación de la rutina libre falla, la creación del usuario
-     * también se revierte por la anotación @Transactional.
+     * Hashea la contraseña, crea el usuario y retorna un JWT listo para usar.
+     * El usuario comienza sin rutinas — debe crear una para iniciar una sesión.
      *
      * @param request datos de registro con name, email y contraseña en texto plano
      * @return AuthResponse con el JWT generado
@@ -78,7 +71,6 @@ public class AuthService {
         Long userId = userRepository.save(request.name(),
                                           request.email(),
                                           hashedPassword);
-        this.routineRepository.saveFree(userId);
         String token = jwtService.generateToken(request.email());
         LOG.info("Nuevo usuario registrado — userId: {}", userId);
         return new AuthResponse(token);
@@ -116,11 +108,9 @@ public class AuthService {
     /**
      * Autentica o registra un usuario mediante Google OAuth.
      * Verifica el token con Google y maneja tres casos:
-     * - Usuario nuevo → crea cuenta con rutina libre y genera JWT
+     * - Usuario nuevo → crea cuenta y genera JWT
      * - Usuario existente con Google → genera JWT directamente
      * - Usuario existente con contraseña → lanza ForbiddenException
-     * Si se crea un nuevo usuario y la rutina libre falla,
-     * toda la operación se revierte por la anotación @Transactional.
      *
      * @param request DTO con el token de identidad de Google
      * @return AuthResponse con el JWT generado
@@ -140,7 +130,6 @@ public class AuthService {
             Long userId = userRepository.saveGoogleUser((String) payload.get("name"),
                                                         payload.getEmail(),
                                                         payload.getSubject());
-            this.routineRepository.saveFree(userId);
             LOG.info("Nuevo usuario registrado — userId: {}", userId);
         } else {
             User user = existingUser.get();

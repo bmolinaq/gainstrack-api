@@ -22,8 +22,6 @@ CREATE TABLE muscle_groups (
 -- 2. users
 -- Usuarios registrados en el sistema.
 -- Sin FK propias. Otras tablas dependen de esta.
--- Al registrarse se crea automáticamente una rutina libre
--- asociada al usuario desde AuthService.
 -- Soporta dos métodos de autenticación:
 --   - Email/contraseña: password_hash con valor, google_id NULL
 --   - Google OAuth:     google_id con valor, password_hash NULL
@@ -95,9 +93,7 @@ CREATE INDEX idx_exercises_user_id ON exercises(user_id);
 -- 5. routines
 -- Plantillas de entrenamiento reutilizables por usuario.
 -- Funcionan como carpetas que agrupan sesiones del mismo tipo.
--- is_free: identifica la rutina especial "Sesión Libre" —
---          creada automáticamente al registrar el usuario,
---          no eliminable, solo renombrable.
+-- Para iniciar una sesión el usuario debe tener al menos una rutina.
 -- CASCADE: al eliminar usuario se eliminan sus rutinas.
 -- CASCADE: al eliminar rutina se eliminan sus sesiones asociadas.
 -- ------------------------------------------------------------
@@ -106,7 +102,6 @@ CREATE TABLE routines (
     user_id    BIGINT       NOT NULL,
     name       VARCHAR(150) NOT NULL,
     notes      TEXT         NULL,
-    is_free    BOOLEAN      NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_routines      PRIMARY KEY (id),
     CONSTRAINT fk_routines_user FOREIGN KEY (user_id)
@@ -170,8 +165,7 @@ CREATE INDEX idx_routine_sets_routine_exercise_id
 -- ------------------------------------------------------------
 -- 8. training_sessions
 -- Ejecuciones reales de una rutina en una fecha específica.
--- routine_id NOT NULL: toda sesión pertenece a una rutina —
---   sesiones libres se asocian a la rutina especial is_free = TRUE.
+-- routine_id NOT NULL: toda sesión pertenece a una rutina.
 -- gym_id NULL: el gym es opcional — se muestra "No especificado".
 -- duration: duración real de la sesión en minutos —
 --   el timer comienza automáticamente al iniciar la sesión.
@@ -213,7 +207,7 @@ CREATE INDEX idx_ts_routine_id ON training_sessions(routine_id);
 -- 9. session_exercises
 -- Ejercicios realizados dentro de una sesión de entrenamiento.
 -- Copiados desde routine_exercises al ejecutar una rutina,
--- o agregados manualmente en sesiones libres.
+-- o agregados manualmente durante la sesión.
 -- Sin UNIQUE en (session_id, exercise_id): un ejercicio puede
 -- repetirse dentro de la misma sesión.
 -- order_index: define el orden de los ejercicios en la sesión.
@@ -242,7 +236,7 @@ CREATE INDEX idx_se_session_exercise ON session_exercises(session_id, exercise_i
 -- 10. sets
 -- Series realizadas dentro de un ejercicio de sesión.
 -- Copiados desde routine_sets al ejecutar una rutina,
--- o agregados manualmente en sesiones libres.
+-- o agregados manualmente durante la sesión.
 -- weight y reps son NULL cuando el usuario no conoce los valores.
 -- weight: DECIMAL(5,2) soporta hasta 999.99 kg con exactitud garantizada.
 -- CASCADE: al eliminar session_exercise se eliminan sus sets.

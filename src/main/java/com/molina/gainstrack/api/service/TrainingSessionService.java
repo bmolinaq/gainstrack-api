@@ -114,8 +114,7 @@ public class TrainingSessionService {
      * pertenezcan al usuario antes de insertar.
      * Si viene routineExercises, en la misma transacción se reemplazan los
      * ejercicios y sets de la rutina por los recibidos — el cliente decide su
-     * contenido (solo pesos/reps actualizados, o también la estructura). Se
-     * ignora para la rutina libre, que no tiene plantilla.
+     * contenido (solo pesos/reps actualizados, o también la estructura).
      *
      * @param request datos completos de la sesión — routineId y duration obligatorios,
      *                gymId/notes opcionales, exercises con sus sets anidados,
@@ -127,7 +126,8 @@ public class TrainingSessionService {
     public TrainingSessionDetailResponse save(TrainingSessionRequest request) {
         User user = this.authUtils.getAuthenticatedUser();
 
-        boolean isFreeRoutine = this.routineRepository.findIsFreeById(request.routineId(), user.getId());
+        if (!this.routineRepository.existsById(request.routineId(), user.getId()))
+            throw new NotFoundException("Rutina no encontrada");
 
         if (request.gymId() != null)
             this.gymRepository.findById(request.gymId(), user.getId());
@@ -147,7 +147,7 @@ public class TrainingSessionService {
         LOG.info("Nueva sesión creada — sessionId: {}, userId: {}, routineId: {}, exercises: {}, sets: {}",
                 session.id(), user.getId(), request.routineId(), exerciseCount, setCount);
 
-        if (request.routineExercises() != null && !isFreeRoutine) {
+        if (request.routineExercises() != null) {
             this.routineRepository.replaceExercises(request.routineId(), request.routineExercises());
             LOG.info("Rutina actualizada desde sesión — routineId: {}, sessionId: {}, exercises: {}",
                      request.routineId(), session.id(), request.routineExercises().size());
@@ -175,7 +175,7 @@ public class TrainingSessionService {
      * en un gimnasio puntual — por ejemplo, todas las sesiones de la rutina de
      * piernas realizadas en un gimnasio determinado.
      * gymId puede ser null para consultar sesiones sin gimnasio asociado
-     * (sesión libre de gimnasio) — se trata como un gimnasio más.
+     * (sesión sin gimnasio) — se trata como un gimnasio más.
      *
      * @param routineId id de la rutina consultada
      * @param gymId     id del gimnasio consultado — null representa sin gimnasio

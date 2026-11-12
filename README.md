@@ -36,14 +36,14 @@ inmutables organizadas como carpetas.
      usuario no agregó ni eliminó ejercicios/series (o eligió mantener la
      rutina), envía la estructura original con los pesos y reps nuevos; si
      eligió actualizarla, envía lo que quedó en pantalla. `null` no toca la
-     rutina, y se ignora para la rutina libre
+     rutina
 6. Las sesiones se organizan dentro de la carpeta de su rutina,
    ordenadas de más reciente a más antigua
 
 ### Conceptos clave
 
-- **Rutina libre** (`is_free = TRUE`): creada automáticamente al registrar
-  el usuario. Recibe sesiones sin rutina específica. No se puede eliminar.
+- **Toda sesión pertenece a una rutina**: el usuario comienza sin rutinas y
+  debe crear al menos una para iniciar una sesión de entrenamiento.
 - **Sesiones inmutables**: una vez completadas no se editan — son registro
   histórico real del entrenamiento.
 - **Ejercicios globales**: `user_id = NULL`, visibles para todos los usuarios.

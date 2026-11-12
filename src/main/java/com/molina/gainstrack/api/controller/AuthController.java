@@ -51,7 +51,7 @@ public class AuthController {
 
     /**
      * Autentica o registra un usuario mediante Google OAuth y devuelve un JWT.
-     * Si el usuario no existe se crea automáticamente con su rutina libre.
+     * Si el usuario no existe se crea automáticamente.
      * Si el email ya está registrado con contraseña se lanza error.
      *
      * @param request body con el token de identidad de Google

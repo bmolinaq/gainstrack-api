@@ -11,12 +11,10 @@ import java.util.List;
  * @param name      nombre de la rutina
  * @param createdAt fecha de creación de la rutina
  * @param notes     notas opcionales de la rutina
- * @param isFree    indica si es la rutina especial de sesiones libres
  * @param exercises lista de ejercicios con sus sets de referencia
  */
 public record RoutineDetailResponse(Long id,
                                     String name,
                                     LocalDate createdAt,
                                     String notes,
-                                    Boolean isFree,
                                     List<RoutineExerciseResponse> exercises) {}

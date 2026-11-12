@@ -42,7 +42,7 @@ public class RoutineRepository {
      * @return lista de rutinas con sus datos de cabecera
      */
     public List<RoutineSummaryResponse> findAll(Long userId) {
-        return this.jdbcClient.sql("SELECT id, name, created_at, notes, is_free " +
+        return this.jdbcClient.sql("SELECT id, name, created_at, notes " +
                                    "FROM routines " +
                                    "WHERE user_id = :userId")
                               .param("userId", userId)
@@ -66,8 +66,7 @@ public class RoutineRepository {
         return jdbcClient.sql("SELECT id AS routine_id, " +
                                      "name AS routine_name, " +
                                      "created_at AS routine_created_at, " +
-                                     "notes AS routine_notes, " +
-                                     "is_free AS routine_is_free " +
+                                     "notes AS routine_notes " +
                                      "FROM routines " +
                                      "WHERE id = :id AND user_id = :userId")
                          .param("id", id)
@@ -128,7 +127,6 @@ public class RoutineRepository {
                                      rs.getDate("routine_created_at")
                                        .toLocalDate(),
                                      rs.getString("routine_notes"),
-                                     rs.getBoolean("routine_is_free"),
                                      routineExercises
                              );
                          })
@@ -137,24 +135,21 @@ public class RoutineRepository {
     }
 
     /**
-     * Indica si una rutina del usuario es la rutina libre.
-     * Sirve también como validación liviana de pertenencia — no carga
-     * ejercicios ni sets.
+     * Indica si una rutina existe y pertenece al usuario.
+     * Validación liviana — no carga ejercicios ni sets.
      *
-     * @param id     id de la rutina a consultar
+     * @param id     id de la rutina a verificar
      * @param userId id del usuario propietario — previene acceso a rutinas ajenas
-     * @return true si es la rutina libre (is_free = TRUE)
-     * @throws NotFoundException si la rutina no existe o no pertenece al usuario
+     * @return true si la rutina existe y pertenece al usuario
      */
-    public boolean findIsFreeById(Long id, Long userId) {
-        return jdbcClient.sql("SELECT is_free " +
+    public boolean existsById(Long id, Long userId) {
+        return jdbcClient.sql("SELECT COUNT(*) " +
                               "FROM routines " +
                               "WHERE id = :id AND user_id = :userId")
                          .param("id", id)
                          .param("userId", userId)
-                         .query(Boolean.class)
-                         .optional()
-                         .orElseThrow(() -> new NotFoundException("Rutina no encontrada"));
+                         .query(Integer.class)
+                         .single() > 0;
     }
 
     /**
@@ -200,7 +195,6 @@ public class RoutineRepository {
 
     /**
      * Crea una nueva rutina para el usuario autenticado.
-     * La rutina se crea con is_free = FALSE por defecto.
      * Usa KeyHolder para obtener el id generado y retornar el registro creado.
      *
      * @param userId id del usuario autenticado
@@ -219,7 +213,7 @@ public class RoutineRepository {
                        .update(keyHolder);
         Long routineId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return this.jdbcClient.sql("SELECT id, name, created_at, notes, is_free " +
+        return this.jdbcClient.sql("SELECT id, name, created_at, notes " +
                                    "FROM routines " +
                                    "WHERE id = :routineId AND user_id = :userId")
                               .param("routineId", routineId)
@@ -260,7 +254,6 @@ public class RoutineRepository {
      * Por el CASCADE del modelo relacional, se eliminan también
      * todos los routine_exercises, routine_sets y training_sessions asociados.
      * El userId garantiza que el usuario solo pueda eliminar sus propias rutinas.
-     * La validación de is_free se realiza en el service antes de llamar este método.
      *
      * @param id     id de la rutina a eliminar
      * @param userId id del usuario propietario — previene eliminación de rutinas ajenas
@@ -488,20 +481,6 @@ public class RoutineRepository {
 
         return this.findById(id,
                              userId);
-    }
-
-    /**
-     * Crea la rutina libre por defecto para un usuario recién registrado.
-     * Esta rutina es especial — is_free = TRUE — y no puede ser eliminada.
-     * Recibe sesiones sin rutina específica asignada.
-     *
-     * @param userId id del usuario recién registrado
-     */
-    public void saveFree(Long userId) {
-        this.jdbcClient.sql("INSERT INTO routines (user_id, name, notes, is_free) " +
-                            "VALUES (:userId, 'Rutina Libre', NULL, TRUE)")
-                       .param("userId", userId)
-                       .update();
     }
 
     /**

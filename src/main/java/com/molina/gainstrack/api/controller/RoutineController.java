@@ -78,7 +78,6 @@ public class RoutineController {
     /**
      * Elimina una rutina del usuario autenticado.
      * Advertencia: elimina también todos los ejercicios, sets y sesiones asociadas.
-     * La rutina libre no se puede eliminar.
      *
      * @param id id de la rutina a eliminar
      * @return 204 No Content

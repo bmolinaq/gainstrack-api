@@ -38,25 +38,6 @@ public class TrainingSessionController {
    }
 
     /**
-     * Retorna el resumen de la última sesión de entrenamiento del usuario autenticado
-     * para una rutina y gimnasio específicos.
-     * Se usa en el flujo de inicio de entrenamiento: el usuario elige en qué gimnasio
-     * va a entrenar y el frontend consulta la última sesión de esa rutina en ese
-     * gimnasio para mostrar el progreso previo antes de crear la nueva sesión.
-     *
-     * @param routineId id de la rutina consultada
-     * @param gymId     id del gimnasio consultado — opcional, si se omite se
-     *                  consultan sesiones sin gimnasio asociado (sesión libre de gimnasio)
-     * @return 200 OK con el resumen de la última sesión encontrada
-     */
-    @GetMapping("/last")
-    public ResponseEntity<TrainingSessionSummaryResponse> findLastByRoutineAndGym(
-            @RequestParam("routineId") Long routineId,
-            @RequestParam(value = "gymId", required = false) Long gymId) {
-        return ResponseEntity.ok(this.trainingSessionService.findLastByRoutineAndGym(routineId, gymId));
-    }
-
-    /**
      * Retorna el resumen de todas las sesiones del usuario autenticado para una
      * rutina y gimnasio específicos, ordenadas de más reciente a más antigua.
      * Se usa para consultar el historial completo de entrenamientos de una rutina
@@ -77,16 +58,17 @@ public class TrainingSessionController {
     }
 
     /**
-     * Simula cómo quedaría una nueva sesión antes de crearla, sin persistir nada.
+     * Retorna el molde de una nueva sesión construido desde la rutina, sin persistir
+     * nada. Valida que la rutina y el gimnasio pertenezcan al usuario autenticado.
      * El frontend usa esta respuesta como punto de partida editable: el usuario
      * la ajusta durante el entrenamiento y recién al terminar envía el resultado
      * final a POST /sessions. Evita dejar sesiones huérfanas en la base de datos
      * cuando el usuario abandona el entrenamiento antes de terminarlo.
      *
-     * @param routineId id de la rutina a simular
+     * @param routineId id de la rutina a ejecutar
      * @param gymId     id del gimnasio — opcional, si se omite se simula una
      *                  sesión sin gimnasio asociado (sesión libre de gimnasio)
-     * @return 200 OK con el detalle simulado de la sesión — id siempre null
+     * @return 200 OK con el molde de la sesión — ids de sesión, ejercicios y sets siempre null
      */
     @GetMapping("/preview")
     public ResponseEntity<TrainingSessionDetailResponse> preview(

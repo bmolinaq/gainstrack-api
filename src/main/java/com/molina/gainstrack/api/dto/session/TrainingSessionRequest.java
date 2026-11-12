@@ -19,7 +19,11 @@ import java.util.List;
  * @param gymId     id del gimnasio donde se realiza la sesión — opcional, puede ser null
  * @param duration  duración de la sesión en minutos — obligatorio
  * @param notes     notas de la sesión — opcional
- * @param exercises ejercicios realizados con sus sets — opcional, null se trata como lista vacía
+ * @param exercises        ejercicios realizados con sus sets — opcional, null se trata como lista vacía
+ * @param routineExercises nueva plantilla de la rutina (ejercicios y sets) — opcional.
+ *                         null no modifica la rutina; con valor, reemplaza por completo
+ *                         los ejercicios y sets de la rutina (una lista vacía la deja vacía).
+ *                         Se ignora si la rutina es la rutina libre
  */
 public record TrainingSessionRequest(
         @NotNull(message = "{field.required}")
@@ -31,5 +35,7 @@ public record TrainingSessionRequest(
         Integer duration,
         String notes,
         @Valid
-        List<SessionExerciseRequest> exercises
+        List<SessionExerciseRequest> exercises,
+        @Valid
+        List<SessionExerciseRequest> routineExercises
 ) {}

@@ -18,20 +18,10 @@ inmutables organizadas como carpetas.
 2. Antes de entrenar, el usuario elige el **gimnasio** donde va a
    entrenar en ese momento
 3. Al **elegir ejecutar una rutina**, el frontend llama a
-   `GET /sessions/preview` para simular cómo quedaría la sesión, sin
-   persistir nada. La **estructura** simulada (qué ejercicios, en qué orden
-   y cuántos sets) proviene siempre de la **rutina actual**. Sobre esa
-   estructura:
-   - si el usuario ya entrenó esa misma rutina en ese mismo gimnasio
-     (gymId null cuenta como un gimnasio más — "sesión libre de gimnasio"),
-     se sobreescriben peso y reps con los valores reales de su **última
-     sesión** para los ejercicios y sets que ya existían;
-   - los ejercicios de la rutina que **no** estaban en la última sesión
-     (por ejemplo, agregados después) usan sus **valores de referencia**;
-   - los ejercicios que ya **no** están en la rutina se descartan aunque
-     estuvieran en la última sesión;
-   - si es la primera vez que entrena la rutina en ese gimnasio, se copian
-     directamente los valores de referencia de la **plantilla de la rutina**
+   `GET /sessions/preview` para obtener el molde de la sesión, sin
+   persistir nada. El molde se construye desde la **rutina**: ejercicios,
+   orden, sets, pesos, reps y notas de referencia, con todos los ids en
+   null. El endpoint valida que la rutina y el gimnasio pertenezcan al usuario
 4. El usuario ajusta pesos y reps reales durante el entrenamiento, editando
    libremente la simulación devuelta por `preview`
 5. Al terminar, ingresa notas y llama a `POST /sessions` con el resultado
@@ -40,6 +30,13 @@ inmutables organizadas como carpetas.
    Separar la simulación (`preview`) de la persistencia (`POST`) evita dejar
    sesiones huérfanas en la base de datos cuando el usuario abandona el
    entrenamiento antes de terminarlo
+   - En el mismo request puede enviar `routineExercises` con la nueva
+     plantilla de la rutina; el backend reemplaza ejercicios y sets de la
+     rutina en la misma transacción. El frontend decide el contenido: si el
+     usuario no agregó ni eliminó ejercicios/series (o eligió mantener la
+     rutina), envía la estructura original con los pesos y reps nuevos; si
+     eligió actualizarla, envía lo que quedó en pantalla. `null` no toca la
+     rutina, y se ignora para la rutina libre
 6. Las sesiones se organizan dentro de la carpeta de su rutina,
    ordenadas de más reciente a más antigua
 
@@ -162,7 +159,6 @@ PATCH  /api/v1/routines/{id}/exercises/{routineExerciseId}/sets/{setId}
 ### Sesiones
 ```
 GET    /api/v1/sessions
-GET    /api/v1/sessions/last?routineId={routineId}&gymId={gymId}
 GET    /api/v1/sessions/history?routineId={routineId}&gymId={gymId}
 GET    /api/v1/sessions/preview?routineId={routineId}&gymId={gymId}
 GET    /api/v1/sessions/{id}
@@ -236,18 +232,12 @@ src/main/resources
 - **Sesiones inmutables** — preservan el historial real de entrenamiento
 - **Soft delete en exercises** — preserva integridad del historial de sesiones
 - **COALESCE en PATCH** — edición parcial sin sobrescribir campos no enviados
-- **Preview separado de la creación** — `GET /sessions/preview` simula la sesión
-  (merge de rutina actual + último entrenamiento por gimnasio) sin persistir nada;
+- **Preview separado de la creación** — `GET /sessions/preview` entrega el molde
+  de la sesión construido desde la rutina, sin persistir nada;
   `POST /sessions` recibe el resultado final ya editado por el usuario y lo
   persiste tal cual, sin ninguna lógica de fusión. Este split evita dejar sesiones
   huérfanas en la base de datos cuando el usuario abandona el entrenamiento antes
   de terminarlo
-- **Simulación de preview como merge de rutina actual + último entrenamiento por
-  gimnasio** — la estructura (ejercicios, orden y sets) siempre sale de la rutina
-  actual; sobre ella se sobreescriben peso y reps con los de la última sesión del
-  usuario para la misma rutina y el mismo gimnasio (comparando `gym_id` con el
-  operador NULL-safe `<=>` de MySQL, para que "sin gimnasio" también cuente como
-  un grupo válido). Los ejercicios de la rutina que no estaban en la última sesión
-  usan sus valores de referencia, y los que ya no están en la rutina se descartan.
-  Si no hay sesión previa, se cae a la plantilla de la rutina
+- **Molde desde la rutina** — la rutina es la única fuente del molde (estructura y
+  valores de referencia). No se arrastran pesos ni reps de sesiones anteriores
 - **Virtual Threads** — mejor rendimiento en operaciones I/O concurrentes

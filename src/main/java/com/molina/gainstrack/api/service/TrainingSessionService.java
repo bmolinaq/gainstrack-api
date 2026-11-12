@@ -1,9 +1,13 @@
 package com.molina.gainstrack.api.service;
 
+import com.molina.gainstrack.api.dto.gym.GymResponse;
+import com.molina.gainstrack.api.dto.routine.RoutineDetailResponse;
 import com.molina.gainstrack.api.dto.session.*;
 import com.molina.gainstrack.api.exception.NotFoundException;
 import com.molina.gainstrack.api.model.User;
 import com.molina.gainstrack.api.repository.ExerciseRepository;
+import com.molina.gainstrack.api.repository.GymRepository;
+import com.molina.gainstrack.api.repository.RoutineRepository;
 import com.molina.gainstrack.api.repository.TrainingSessionRepository;
 import com.molina.gainstrack.api.utils.AuthUtils;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -25,17 +30,26 @@ public class TrainingSessionService {
 
     private final TrainingSessionRepository trainingSessionRepository;
     private final ExerciseRepository exerciseRepository;
+    private final RoutineRepository routineRepository;
+    private final GymRepository gymRepository;
     private final AuthUtils authUtils;
 
     /**
      * @param trainingSessionRepository repositorio de acceso a datos de sesiones
+     * @param exerciseRepository        repositorio de acceso a datos de ejercicios
+     * @param routineRepository         repositorio de acceso a datos de rutinas
+     * @param gymRepository             repositorio de acceso a datos de gimnasios
      * @param authUtils                 utilidad para obtener el usuario autenticado
      */
     public TrainingSessionService(TrainingSessionRepository trainingSessionRepository,
                                   ExerciseRepository exerciseRepository,
+                                  RoutineRepository routineRepository,
+                                  GymRepository gymRepository,
                                   AuthUtils authUtils) {
         this.trainingSessionRepository = trainingSessionRepository;
         this.exerciseRepository = exerciseRepository;
+        this.routineRepository = routineRepository;
+        this.gymRepository = gymRepository;
         this.authUtils = authUtils;
     }
 
@@ -52,25 +66,43 @@ public class TrainingSessionService {
     }
 
     /**
-     * Simula cómo quedaría una nueva sesión de entrenamiento sin persistir nada.
-     * Ejecuta el mismo algoritmo de fusión que antes vivía dentro de save(): si el
-     * usuario ya entrenó esta rutina en el mismo gimnasio, la estructura de
-     * ejercicios y sets viene de la rutina actual pero el peso/reps se sobreescriben
-     * con los de la última sesión real cuando existen; si es la primera vez, se
-     * copian los valores de referencia de la plantilla de la rutina. Pensado para
-     * que el frontend construya el body de save() a partir de esta respuesta y lo
-     * edite libremente durante el entrenamiento antes de guardarlo — evita dejar
-     * sesiones huérfanas cuando el usuario abandona el entrenamiento antes de
-     * terminarlo. El id de la sesión retornada es siempre null.
+     * Construye el molde de una nueva sesión de entrenamiento a partir de la rutina,
+     * sin persistir nada. Ejercicios, orden, sets, pesos, reps y notas se copian tal
+     * cual desde la plantilla de la rutina. Todos los ids (sesión, ejercicios y sets)
+     * se retornan en null, ya que no representan registros reales — el frontend
+     * puede construir el body de save() directamente desde esta respuesta y editarlo
+     * durante el entrenamiento. Evita dejar sesiones huérfanas cuando el usuario
+     * abandona el entrenamiento antes de terminarlo.
      *
-     * @param routineId id de la rutina a simular — obligatorio
+     * @param routineId id de la rutina a ejecutar — obligatorio
      * @param gymId     id del gimnasio — opcional, null representa sesión sin gimnasio
-     * @return TrainingSessionDetailResponse simulado, con id null, sin persistir en base de datos
-     * @throws NotFoundException si gymId no existe o no pertenece al usuario autenticado
+     * @return TrainingSessionDetailResponse simulado, con ids null y duration 0
+     * @throws NotFoundException si la rutina o el gimnasio no existen o no pertenecen al usuario
      */
     public TrainingSessionDetailResponse preview(Long routineId, Long gymId) {
         User user = this.authUtils.getAuthenticatedUser();
-        return this.trainingSessionRepository.preview(user.getId(), routineId, gymId);
+        RoutineDetailResponse routine = this.routineRepository.findById(routineId, user.getId());
+        GymResponse gym = gymId != null
+                ? this.gymRepository.findById(gymId, user.getId())
+                : new GymResponse(null, "No especificado");
+
+        List<TrainingSessionExerciseResponse> exercises = routine.exercises()
+                .stream()
+                .map(re -> new TrainingSessionExerciseResponse(null,
+                                                               re.orderIndex(),
+                                                               re.notes(),
+                                                               re.exercise(),
+                                                               re.sets()
+                                                                 .stream()
+                                                                 .map(s -> new SetResponse(null,
+                                                                                           s.setNumber(),
+                                                                                           s.weight(),
+                                                                                           s.reps(),
+                                                                                           s.notes()))
+                                                                 .toList()))
+                .toList();
+
+        return new TrainingSessionDetailResponse(null, gym, LocalDate.now(), 0, routine.notes(), exercises);
     }
 
     /**
@@ -78,15 +110,28 @@ public class TrainingSessionService {
      * rutina, gimnasio, duración, notas, ejercicios y sets ya decididos, típicamente
      * a partir de lo que devolvió preview() y luego editado por el usuario durante el
      * entrenamiento. No aplica ninguna lógica de fusión ni de copia: inserta
-     * exactamente lo recibido en el request.
+     * exactamente lo recibido en el request. Valida que la rutina y el gimnasio
+     * pertenezcan al usuario antes de insertar.
+     * Si viene routineExercises, en la misma transacción se reemplazan los
+     * ejercicios y sets de la rutina por los recibidos — el cliente decide su
+     * contenido (solo pesos/reps actualizados, o también la estructura). Se
+     * ignora para la rutina libre, que no tiene plantilla.
      *
      * @param request datos completos de la sesión — routineId y duration obligatorios,
-     *                gymId/notes opcionales, exercises con sus sets anidados
+     *                gymId/notes opcionales, exercises con sus sets anidados,
+     *                routineExercises opcional con la nueva plantilla de la rutina
      * @return TrainingSessionDetailResponse con el detalle completo de la sesión creada
+     * @throws NotFoundException si la rutina o el gimnasio no existen o no pertenecen al usuario
      */
     @Transactional
     public TrainingSessionDetailResponse save(TrainingSessionRequest request) {
         User user = this.authUtils.getAuthenticatedUser();
+
+        boolean isFreeRoutine = this.routineRepository.findIsFreeById(request.routineId(), user.getId());
+
+        if (request.gymId() != null)
+            this.gymRepository.findById(request.gymId(), user.getId());
+
         List<SessionExerciseRequest> exercises = request.exercises() != null ? request.exercises() : List.of();
         TrainingSessionDetailResponse session = this.trainingSessionRepository.save(user.getId(),
                                                                                     request.routineId(),
@@ -101,6 +146,13 @@ public class TrainingSessionService {
                                 .sum();
         LOG.info("Nueva sesión creada — sessionId: {}, userId: {}, routineId: {}, exercises: {}, sets: {}",
                 session.id(), user.getId(), request.routineId(), exerciseCount, setCount);
+
+        if (request.routineExercises() != null && !isFreeRoutine) {
+            this.routineRepository.replaceExercises(request.routineId(), request.routineExercises());
+            LOG.info("Rutina actualizada desde sesión — routineId: {}, sessionId: {}, exercises: {}",
+                     request.routineId(), session.id(), request.routineExercises().size());
+        }
+
         return session;
     }
 
@@ -114,24 +166,6 @@ public class TrainingSessionService {
     public TrainingSessionDetailResponse findById(Long id) {
         User user = this.authUtils.getAuthenticatedUser();
         return this.trainingSessionRepository.findById(id, user.getId());
-    }
-
-    /**
-     * Retorna el resumen de la última sesión del usuario autenticado para una
-     * rutina y gimnasio específicos. Se usa en el flujo de inicio de entrenamiento:
-     * el usuario elige el gimnasio donde va a entrenar y el frontend consulta la
-     * última sesión de esa rutina en ese gimnasio antes de crear la nueva sesión.
-     * gymId puede ser null para consultar sesiones sin gimnasio asociado
-     * (sesión libre de gimnasio) — se trata como un gimnasio más.
-     *
-     * @param routineId id de la rutina consultada
-     * @param gymId     id del gimnasio consultado — null representa sin gimnasio
-     * @return TrainingSessionSummaryResponse con el resumen de la última sesión
-     * @throws NotFoundException si no existe una sesión previa para esa combinación
-     */
-    public TrainingSessionSummaryResponse findLastByRoutineAndGym(Long routineId, Long gymId) {
-        User user = this.authUtils.getAuthenticatedUser();
-        return this.trainingSessionRepository.findLastByRoutineAndGym(routineId, gymId, user.getId());
     }
 
     /**

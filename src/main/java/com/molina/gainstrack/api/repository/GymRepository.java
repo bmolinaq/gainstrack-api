@@ -60,6 +60,24 @@ public class GymRepository {
     }
 
     /**
+     * Retorna un gimnasio del usuario a partir de su id.
+     * El userId garantiza que el usuario solo pueda consultar sus propios gimnasios.
+     *
+     * @param id     id del gimnasio a consultar
+     * @param userId id del usuario propietario — previene acceso a gimnasios ajenos
+     * @return GymResponse con los datos del gimnasio
+     * @throws NotFoundException si el gimnasio no existe o no pertenece al usuario
+     */
+    public GymResponse findById(Long id, Long userId) {
+        return jdbcClient.sql("SELECT id, name FROM gyms WHERE id = :id AND user_id = :userId")
+                         .param("id", id)
+                         .param("userId", userId)
+                         .query(GymResponse.class)
+                         .optional()
+                         .orElseThrow(() -> new NotFoundException("Gimnasio no encontrado"));
+    }
+
+    /**
      * Actualiza el nombre de un gimnasio del usuario autenticado.
      * El userId garantiza que el usuario solo pueda editar sus propios gimnasios.
      *

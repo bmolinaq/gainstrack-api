@@ -4,6 +4,8 @@ import com.molina.gainstrack.api.dto.exercise.ExerciseResponse;
 import com.molina.gainstrack.api.dto.routine.RoutineDetailResponse;
 import com.molina.gainstrack.api.dto.routine.RoutineExerciseResponse;
 import com.molina.gainstrack.api.dto.routine.RoutineSummaryResponse;
+import com.molina.gainstrack.api.dto.session.SessionExerciseRequest;
+import com.molina.gainstrack.api.dto.session.SessionSetRequest;
 import com.molina.gainstrack.api.dto.session.SetResponse;
 import com.molina.gainstrack.api.dto.shared.MuscleGroupResponse;
 import com.molina.gainstrack.api.exception.NotFoundException;
@@ -96,8 +98,8 @@ public class RoutineRepository {
                                                                 .query((rs3, rowNum3) -> new SetResponse(
                                                                         rs3.getLong("id"),
                                                                         rs3.getInt("set_number"),
-                                                                        rs3.getDouble("weight"),
-                                                                        rs3.getInt("reps"),
+                                                                        rs3.getObject("weight", Double.class),
+                                                                        rs3.getObject("reps", Integer.class),
                                                                         rs3.getString("notes")
                                                                 ))
                                                                 .list();
@@ -132,6 +134,68 @@ public class RoutineRepository {
                          })
                          .optional()
                          .orElseThrow(() -> new NotFoundException("Rutina no encontrada"));
+    }
+
+    /**
+     * Indica si una rutina del usuario es la rutina libre.
+     * Sirve también como validación liviana de pertenencia — no carga
+     * ejercicios ni sets.
+     *
+     * @param id     id de la rutina a consultar
+     * @param userId id del usuario propietario — previene acceso a rutinas ajenas
+     * @return true si es la rutina libre (is_free = TRUE)
+     * @throws NotFoundException si la rutina no existe o no pertenece al usuario
+     */
+    public boolean findIsFreeById(Long id, Long userId) {
+        return jdbcClient.sql("SELECT is_free " +
+                              "FROM routines " +
+                              "WHERE id = :id AND user_id = :userId")
+                         .param("id", id)
+                         .param("userId", userId)
+                         .query(Boolean.class)
+                         .optional()
+                         .orElseThrow(() -> new NotFoundException("Rutina no encontrada"));
+    }
+
+    /**
+     * Reemplaza por completo los ejercicios y sets de una rutina.
+     * Elimina los routine_exercises actuales — por el CASCADE se eliminan
+     * también sus routine_sets — e inserta los recibidos en el orden dado.
+     * Es seguro reemplazar los registros: ninguna otra tabla referencia
+     * routine_exercises ni routine_sets (las sesiones referencian solo a routines).
+     * Debe ejecutarse dentro de una transacción.
+     *
+     * @param id        id de la rutina — la pertenencia al usuario debe validarse antes
+     * @param exercises ejercicios con sus sets que pasan a ser la nueva plantilla
+     */
+    public void replaceExercises(Long id, List<SessionExerciseRequest> exercises) {
+        this.jdbcClient.sql("DELETE FROM routine_exercises WHERE routine_id = :id")
+                       .param("id", id)
+                       .update();
+
+        for (SessionExerciseRequest exercise : exercises) {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            this.jdbcClient.sql("INSERT INTO routine_exercises (routine_id, exercise_id, order_index, notes) " +
+                                "VALUES (:id, :exerciseId, :orderIndex, :notes)")
+                           .param("id", id)
+                           .param("exerciseId", exercise.exerciseId())
+                           .param("orderIndex", exercise.orderIndex())
+                           .param("notes", exercise.notes())
+                           .update(keyHolder);
+            Long routineExerciseId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+            List<SessionSetRequest> sets = exercise.sets() != null ? exercise.sets() : List.of();
+            for (SessionSetRequest set : sets) {
+                this.jdbcClient.sql("INSERT INTO routine_sets (routine_exercise_id, set_number, weight, reps, notes) " +
+                                    "VALUES (:routineExerciseId, :setNumber, :weight, :reps, :notes)")
+                               .param("routineExerciseId", routineExerciseId)
+                               .param("setNumber", set.setNumber())
+                               .param("weight", set.weight())
+                               .param("reps", set.reps())
+                               .param("notes", set.notes())
+                               .update();
+            }
+        }
     }
 
     /**

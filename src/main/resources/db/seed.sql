@@ -39,13 +39,14 @@ INSERT INTO gyms (user_id, name) VALUES
 -- ------------------------------------------------------------
 INSERT INTO exercises (name, muscle_group_id, user_id, is_predefined, image_url, video_url) VALUES
 
+update exercises set image_url = 'exercises/images/apertura-de-pecho-con-mancuernas.jpeg', video_url = 'exercises/videos/apertura-de-pecho-con-mancuernas.mp4' where id = 6;
 -- Pecho (id: 1)
 ('Press de Banca con Barra', 1, NULL, TRUE, NULL, NULL),                                                                                                                                          -- id: 1
 ('Press de Banca Inclinado con Barra', 1, NULL, TRUE, NULL, NULL),                                                                                                                                -- id: 2
 ('Press de Banca Declinado con Barra', 1, NULL, TRUE, NULL, NULL),                                                                                                                                -- id: 3
-('Press de Banca con Mancuernas', 1, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 4
+('Press de Banca con Mancuernas', 1, NULL, TRUE, 'exercises/images/press-de-banca-con-mancuernas.jpeg', 'exercises/videos/press-de-banca-con-mancuernas.mp4'),                                                                                                                                     -- id: 4
 ('Press de Banca Inclinado con Mancuernas', 1, NULL, TRUE, 'exercises/images/press-de-banca-inclinado-con-mancuernas.jpeg', 'exercises/videos/press-de-banca-inclinado-con-mancuernas.mp4'),      -- id: 5
-('Aperturas con Mancuernas en Banco Plano', 1, NULL, TRUE, NULL, NULL),                                                                                                                           -- id: 6
+('Aperturas con Mancuernas en Banco Plano', 1, NULL, TRUE, 'exercises/images/apertura-de-pecho-con-mancuernas.jpeg', 'exercises/videos/apertura-de-pecho-con-mancuernas.mp4'),                                                                                                                           -- id: 6
 ('Aperturas con Mancuernas en Banco Inclinado', 1, NULL, TRUE, NULL, NULL),                                                                                                                       -- id: 7
 ('Cruce de Poleas en Polea Alta', 1, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 8
 ('Cruce de Poleas en Polea Baja', 1, NULL, TRUE, NULL, NULL),                                                                                                                                     -- id: 9
